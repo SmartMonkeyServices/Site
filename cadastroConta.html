@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br" xml:lang="pt-br">
+
+<head>
+    <title>Clientes</title>
+    <link rel="stylesheet" href="cssContaReceber.css">
+
+</head>
+
+<body onload="onloadServicos(), onloadData()">
+    <img src="logo site.jpg" alt="Logo da empresa" width="300" height="100" style="display:block; margin: 0 auto;">
+    <form>
+        <label class="label" for="clienteCPF_CNPJ">Cliente</label>
+        <div class="campo-container">
+            <div class="campo">
+                <input type="text" placeholder="Identifique pelo CPF/CNPJ" id="clienteCPF_CNPJ" name="clienteCPF_CNPJ"
+                    onchange="onchangeCliente()" required>
+            </div>
+        </div>
+        <input class="inputs" style=opacity:0.3 type="text" id="nomeCliente" name="nomeCliente" readonly>
+        <label class="label" for="valor">Valor</label>
+        <div class="input">
+            <input type="text" id="valor" name="valor" oninput="formatarMoeda()" required>
+        </div>
+        <label class="label" for="data_emissao">Data de emissão</label>
+        <div class="input">
+            <input type="date" id="data_emissao" name="data_emissao" required>
+        </div>
+        <label class="label" for="data_vencimento">Data de vencimento</label>
+        <div class="input">
+            <input type="date" id="data_vencimento" name="data_vencimento" required>
+        </div>
+        <div class="campo-container">
+            <label for="servico">Serviços Contratados</label>
+            <button class="add-button" title="Adicionar um novo serviço" onclick="abrirFecharAba()">+</button>
+        </div>
+        <div id="aba" style="display:none;">
+            <h4>Adicionar Serviço</h4>
+            <input class="input" type="text" id="novoServico" name="novoServico" placeholder="Nome do Serviço">
+            <button onclick="salvarServico()">Salvar</button>
+            <button onclick="abrirFecharAba()" style="margin-bottom: 20px;">Cancelar</button>
+        </div>
+        <select class="inputs" type="text" id="servicos" name="servicos">
+        </select>
+
+
+        <button type="submit">Confirmar</button>
+    </form>
+    <a href="site.html"><button>Voltar</button></a>
+    <script src="javascriptContaReceber.js"></script>
+
+</body>
+
+</html>

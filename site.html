@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br" xml:lang="pt-br">
+
+<head>
+  <title>Clientes</title>
+  <link rel="stylesheet" href="cascading.css">
+
+</head>
+
+<body>
+  <img src="logo site.jpg" alt="Logo da empresa" width="300" height="100" style="display:block; margin: 0 auto;">
+  <h1 class="corTexto">Clientes</h1>
+
+  <input placeholder="Pesquisar pelo CPF/CNPJ" type="text" id="pesquisar" name="pesquisar" maxlength="250">
+  <button onclick="pesquisar()">Buscar</button>
+
+  <div id="divResultado" style="display: none;">
+    <h4>Resultado</h4><br>
+    <label for="cpf_cnpj">CPF/CNPJ</label>
+    <input id="rCpf_cnpj" name="cpf_cnpj" type="text" readonly="true">
+
+    <label for="nome">Nome/Razão Social</label>
+    <input id="rNomeRazao" name="nome" type="text">
+
+    <div id="divfantasia" style="display: none">
+      <label for="fantasia">Nome Fantasia</label>
+      <input id="rNomeFantasia" name="fantasia" type="text">
+    </div>
+
+    <label for="telefone">Telefone</label>
+    <input id="rTelefone" name="telefone" type="text">
+
+    <label for="celular">Celular</label>
+    <input id="rCelular" name="celular" type="text">
+
+    <label for="email">E-mail</label>
+    <input id="rEmail" name="email" type="text">
+
+    <label for="servicos">Serviços Contratados</label>
+    <input type="text" id="rServicos" name="servicos">
+
+    <label for="CEP">CEP</label>
+    <input id="rCep" name="CEP" type="text">
+
+    <label for="logradouro">Logradouro</label>
+    <input id="rLogradouro" name="logradouro" type="text">
+
+    <label for="complemento">Complemento</label>
+    <input id="rComplemento" name="complemento" type="text">
+
+    <label for="numero">Número</label>
+    <input id="rNumero" name="numero" type="text">
+
+    <label for="bairro">Bairro</label>
+    <input id="rBairro" name="bairro" type="text">
+
+    <label for="cidade">Cidade</label>
+    <input id="rCidade" name="cidade" type="text">
+
+    <label for="estado">Estado</label>
+    <input id="rEstado" name="estado" type="text">
+
+    <label for="pais">País</label>
+    <input id="rPais" name="pais" type="text">
+    <button onclick="atualizaDados()">Salvar</button>
+    <button onclick="deletaCliente()">Excluir</button>
+  </div>
+  <a href="cadastro.html"><button>Novo Cadastro</button></a>
+
+  <h1 class="corTexto">Contas a Receber</h1>
+  <input placeholder="Pesquisar pelo CPF/CNPJ" type="text" id="pesquisarConta" name="pesquisarConta" maxlength="250">
+  <div id="resultadoConta" style="display: flex;">
+    <table id="tableResultado">
+      <tr>
+        <th class= "th" colspan="7" id="nomeCliente">Cliente: </th>
+      </tr>
+      <tr>
+          <th>Número da Fatura</th>
+          <th>CPF/CNPJ</th>
+          <th>Data de Emissão</th>
+          <th>Data de Vencimento</th>
+          <th>Serviços Contratados</th>
+          <th>Valor</th>
+          <th>Status</th>
+      </tr>
+  </table>
+  </div>
+  <button onclick="pesquisarConta()">Buscar</button>
+  <a href="cadastroConta.html"><button>Adicionar Conta a Receber</button></a>
+  <script src="javascript.js"></script>
+  <script src="javascriptContaReceber.js"></script>
+
+</body>
+
+</html>

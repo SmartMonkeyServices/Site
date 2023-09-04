@@ -1,0 +1,79 @@
+.corTexto {
+  color: rgb(58, 233, 254);
+  text-align: center;
+}
+input {
+  display: block; 
+  width: 50%; 
+  margin: 0 auto; 
+
+display: flex; 
+justify-content: center; 
+align-items: center; 
+
+}
+button {
+  display: block; 
+  width: 50%; 
+  margin: 0 auto; 
+display: flex; 
+justify-content: center; 
+align-items: center; 
+}
+
+label{
+  width: 50%;
+  margin: 0 auto;
+display: flex; 
+justify-content:left; 
+align-items:center;
+
+
+}
+
+h4{
+  width: 50%; 
+  margin: 0 auto; 
+display: flex; 
+justify-content: left; 
+align-items: center; 
+font-size: 25px;
+}
+
+.campo-container {
+width: 50%;
+margin: 0 auto;
+display: flex; 
+justify-content:left; 
+align-items:center;
+}
+
+/* .campo {
+
+margin-right: 0px; 
+text-align: left;
+} */
+
+table{
+  width: 75%;
+    margin: 0 auto;
+  display: block; 
+  justify-content:left; 
+  align-items:center;
+}
+
+th{
+  text-align: center;
+  padding: 10px;
+  background-color: aquamarine;
+}
+td{
+  text-align: center;
+}
+
+.th{
+  text-align: left;
+  background-color: black;
+  color: aliceblue;
+}
+
