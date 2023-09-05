@@ -1,10 +1,27 @@
-function formatarMoeda() {
-    var input = document.getElementById("valor");
-    var valor = input.value;
+function formatarMoeda(valor) {
+    if (valor == null) {
+        var input = document.getElementById("valor");
+        var valor = input.value;
+    }
+
     valor = valor.replace(/\D/g, '');
     valor = parseFloat(valor) / 100.0;
     valor = valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    input.value = valor;
+    if (input != null) {
+        input.value = valor;
+    }
+    else {
+        return valor;
+    }
+}
+
+function formatarTextoUpper(string) {
+    const palavras = string.split(" ");
+    for (var i = 0; i < palavras.length; i++) {
+        palavras[i] = palavras[i][0].toUpperCase() + palavras[i].substr(1);
+    }
+    return palavras.join(" ");
+
 }
 
 function abrirFecharAba() {
@@ -17,6 +34,10 @@ function abrirFecharAba() {
     }
 }
 
+function limparContas() {
+    document.getElementById("limparContas").style.display = "none";
+    document.getElementById("resultadoConta").style.display = "none";
+}
 function onloadData() {
     const data = new Date();
     const fusoHorario = data.getTimezoneOffset() / 60; // Obtém o deslocamento de tempo em horas
@@ -26,14 +47,14 @@ function onloadData() {
 
 }
 
-function formataData(data){
+function formataData(data) {
     data = new Date(data);
     const dia = String(data.getDate()).padStart(2, '0');
     const mes = String(data.getMonth() + 1).padStart(2, '0');
     const ano = data.getFullYear();
     const dataFormatada = `${dia}/${mes}/${ano}`;
     return dataFormatada
- }
+}
 
 
 function validaCPF(cpf) {
@@ -126,77 +147,101 @@ function onloadServicos() {
 
 }
 
-function onchangeCliente(validacao) {
+async function onchangeCliente(validacao) {
     var pesquisar;
+    var pesquisarElement;
     var nomeCliente = document.getElementById("nomeCliente");
     nomeCliente.innerText = "Cliente: ";
     if (validacao != null) {
-        pesquisar = validacao;
+        if (typeof validacao.value != "undefined") {
+            pesquisarElement = validacao;
+            pesquisar = pesquisarElement.value;
+        }
+        else {
+            pesquisar = validacao;
+        }
     } else {
-        pesquisar = document.getElementById("clienteCPF_CNPJ");
-
+        pesquisarElement = document.getElementById("clienteCPF_CNPJ");
+        pesquisar = pesquisarElement.value;
 
     }
 
-    pesquisar.value = pesquisar.value.replace(/\D/g, "")
-    if (pesquisar.value.length == 11) {
-        if (validaCPF(pesquisar.value)) {
-            pesquisar.value = pesquisar.value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+    pesquisar = pesquisar.replace(/\D/g, "")
+    if (pesquisar.length == 11) {
+        if (validaCPF(pesquisar)) {
+            pesquisar = pesquisar.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+            retornoNome = await pesquisarNomePorCPF_CNPJ(pesquisar);
+            if (validacao == null) {
+                nomeCliente.value = retornoNome;
+            }
+            else {
+                nomeCliente.innerText += retornoNome;
+            }
         }
         else {
             alert("CPF inválido")
             nomeCliente.value = "";
-            pesquisar.focus();
+            pesquisarElement.focus();
             return
         }
 
     }
-    else if (pesquisar.value.length == 14) {
-        if (validaCNPJ(pesquisar.value)) {
-            pesquisar.value = pesquisar.value.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5")
+    else if (pesquisar.length == 14) {
+        if (validaCNPJ(pesquisar)) {
+            pesquisar = pesquisar.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5")
+            retornoNome = await pesquisarNomePorCPF_CNPJ(pesquisar);
+            if (validacao == null) {
+                nomeCliente.value = retornoNome;
+            }
+            else {
+                nomeCliente.innerText += retornoNome;
+            }
         }
         else {
             nomeCliente.value = "";
             alert("CNPJ inválido")
-            pesquisar.focus();
+            pesquisarElement.focus();
             return
         }
     }
     else {
         alert("Digite um CNPJ ou CPF")
         nomeCliente.value = "";
-        pesquisar.focus();
+        pesquisarElement.focus();
         return
     }
+    return { sucess: true, pesquisar: pesquisar }
 
-    var data = JSON.stringify({ cpf_cnpj: pesquisar.value });
+}
 
-    var xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
+function pesquisarNomePorCPF_CNPJ(cpf_cnpj) {
+    return new Promise(function (resolve, reject) {
+        var data = JSON.stringify({ cpf_cnpj: cpf_cnpj });
 
-    xhr.addEventListener("readystatechange", function () {
-        if (this.readyState === 4) {
-            console.log(this.responseText);
-            if (this.responseText != "CPF não encontrado") {
-                jsonResponse = JSON.parse(this.responseText)
-                if (validacao == null) {
-                    nomeCliente.value = jsonResponse[0].nome_razao_social;
-                } else {
-                    nomeCliente.innerText += jsonResponse[0].nome_razao_social;
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                console.log(this.responseText);
+                if (this.responseText != "CPF não encontrado") {
+                    jsonResponse2 = JSON.parse(this.responseText)
+                    resolve(jsonResponse2[0].nome_razao_social);
+
+
+                }
+                else {
+
+                    alert(this.responseText);
                 }
 
             }
-            else {
-                alert(this.responseText);
-            }
+        });
+        xhr.open("POST", "http://127.0.0.1:5000/consulta-nome", true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 
-        }
+        xhr.send(data);
     });
-    xhr.open("POST", "http://127.0.0.1:5000/consulta-nome", true);
-    xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
-
-    xhr.send(data);
-
 
 }
 
@@ -232,7 +277,7 @@ function salvarServico() {
 }
 
 function consultaServico(id) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         var data = JSON.stringify({
             servico: id,
         });
@@ -393,7 +438,7 @@ function inserirConta() {
             console.log(this.responseText);
             alert(this.responseText);
             var elementos = document.getElementsByTagName("input");
-            for (var i = 0; i < elementos.length; i++){
+            for (var i = 0; i < elementos.length; i++) {
                 elementos[i].value = "";
 
             }
@@ -407,16 +452,33 @@ function inserirConta() {
     xhr.send(data);
 }
 
-function pesquisarConta() {
+async function pesquisarConta() {
     var pesquisar = document.getElementById("pesquisarConta");
     var tableElement = document.getElementById("tableResultado");
-    var trElements = tableElement.getElementsByTagName("tr")
+    var divResultadoConta = document.getElementById("resultadoConta");
+    divResultadoConta.style.display = "none";
+    var trElements = tableElement.getElementsByTagName("tr");
+    var limparBotao = document.getElementById("limparContas");
+    limparBotao.style.display = "none";
     while (trElements.length > 2) {
         tableElement.removeChild(trElements[2]);
     }
-    onchangeCliente(pesquisar)
+    pesquisar.value = pesquisar.value.replace(/\D/g, "")
+    if (pesquisar.value == null || pesquisar.value == "") {
+        alert("Insira algum termo para pesquisa")
+        return
+    }
+    if (pesquisar.value.length == 11 || pesquisar.value.length == 14) {
+        var validaCliente = await onchangeCliente(pesquisar);
+        if (validaCliente.sucess == true) {
+            var data = JSON.stringify({ cpf_cnpj: validaCliente.pesquisar });
+        }
 
-    var data = JSON.stringify({ cpf_cnpj: pesquisar.value });
+    }
+    else {
+        var data = JSON.stringify({ id: pesquisar.value });
+    }
+
 
 
     var xhr = new XMLHttpRequest();
@@ -426,7 +488,10 @@ function pesquisarConta() {
         if (this.readyState === 4) {
             console.log(this.responseText);
             if (this.responseText != "Nenhum conta a receber encontrada") {
+                divResultadoConta.style.display = "flex";
+                limparBotao.style.display = "block";
                 jsonResponse = JSON.parse(this.responseText)
+                onchangeCliente(jsonResponse[0].cpf_cnpj);
                 jsonResponse.forEach(async function (registro) {
                     registro = {
                         "id": registro.id,
@@ -434,17 +499,16 @@ function pesquisarConta() {
                         "data_emissao": formataData(registro.data_emissao),
                         "data_vencimento": formataData(registro.data_vencimento),
                         "servicos_contratados": await consultaAsyncServico(registro.servicos_id),
-                        "valor": registro.valor.toLocaleString('pt-BR', {
-                            style: 'currency',
-                            currency: 'BRL',
-                            minimumFractionDigits: 2
-                        }),
-                        "status": registro.status
+                        "valor": formatarMoeda(registro.valor),
+                        "status": formatarTextoUpper(registro.status)
                     }
                     var trElement = document.createElement("tr");
                     for (var propriedade in registro) {
                         if (registro.hasOwnProperty(propriedade)) {
                             var tdElement = document.createElement("td");
+                            if (propriedade == "id") {
+                                tdElement.onclick = ""
+                            }
                             tdElement.innerText = registro[propriedade];
                             trElement.appendChild(tdElement);
                         }
@@ -459,6 +523,7 @@ function pesquisarConta() {
 
             }
             else {
+                divResultadoConta.style.display = "none";
                 alert(this.responseText);
             }
 
@@ -470,4 +535,42 @@ function pesquisarConta() {
     xhr.send(data);
 
 
+}
+
+function pesquisarContaPorID(id) {
+    return new Promise(function (resolve, reject) {
+    var data = JSON.stringify({ id: pesquisar.value });
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+            console.log(this.responseText);
+            if (this.responseText != "Nenhum conta a receber encontrada") {
+                jsonResponse = JSON.parse(this.responseText)
+                resolve(jsonResponse[0]);
+            }
+            else {
+                alert(this.responseText);
+            }
+
+        }
+    });
+    xhr.open("POST", "http://127.0.0.1:5000/consulta-receber", true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+
+    xhr.send(data);
+
+    });
+}
+
+async function editarConta(id) {
+    window.open("cadastroConta.html", '_blank');
+    var conta = await pesquisarContaPorID(id);
+    var cpf_cnpj = document.getElementById("clienteCPF_CNPJ").value;
+    var valor = document.getElementById("valor").value.replace("R$ ", "").replace(".", "").replace(",", ".").replace(" ", "");
+    var data_emissao = document.getElementById("data_emissao").value;
+    var data_vencimento = document.getElementById("data_vencimento").value;
+    var servico = document.getElementById("servicos").selectedOptions[0].value;
+    
 }
