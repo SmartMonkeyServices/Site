@@ -32,6 +32,7 @@ function abrirFecharAba() {
     else {
         aba.style.display = "none";
     }
+    return true;
 }
 
 function limparContas() {
@@ -314,90 +315,11 @@ async function consultaAsyncServico(id) {
     }
 }
 
-function deletaCliente() {
+var botaoClicado = null;
 
-    // Cria um objeto com os valores do formulário
-    if (confirm("Confirma a exclusão?")) {
-        var cpf_cnpj = document.getElementById("rCpf_cnpj").value;
-        var data = JSON.stringify({ cpf_cnpj: cpf_cnpj });
-
-        var xhr = new XMLHttpRequest();
-        xhr.withCredentials = true;
-
-        xhr.addEventListener("readystatechange", function () {
-            if (this.readyState === 4) {
-                console.log(this.responseText);
-                alert(this.responseText);
-            }
-        });
-        xhr.open("DELETE", "http://127.0.0.1:5000/delete-dados", true);
-        xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
-
-        xhr.send(data);
-        divResultado.style.display = "none";
-    }
-
-
-
+function setBotaoClicado(botao) {
+    botaoClicado = botao;
 }
-
-
-
-function atualizaDados() {
-
-    var cpf_cnpj = document.getElementById("rCpf_cnpj").value;
-    var nome = document.getElementById("rNomeRazao").value;
-    var fantasia = document.getElementById("rNomeFantasia").value;
-    var email = document.getElementById("rEmail").value;
-    var telefone = document.getElementById("rTelefone").value;
-    var celular = document.getElementById("rCelular").value;
-    var servicos = document.getElementById("rServicos").value;
-    var CEP = document.getElementById("rCep").value;
-    var logradouro = document.getElementById("rLogradouro").value;
-    var complemento = document.getElementById("rComplemento").value;
-    var numero = document.getElementById("rNumero").value;
-    var bairro = document.getElementById("rBairro").value;
-    var cidade = document.getElementById("rCidade").value;
-    var estado = document.getElementById("rEstado").value;
-    var pais = document.getElementById("rPais").value;
-
-    var data = JSON.stringify({
-        cpf_cnpj: cpf_cnpj,
-        nome: nome,
-        fantasia: fantasia,
-        email: email,
-        telefone: telefone,
-        celular: celular,
-        servicos: servicos,
-        CEP: CEP,
-        logradouro: logradouro,
-        complemento: complemento,
-        numero: numero,
-        bairro: bairro,
-        cidade: cidade,
-        estado: estado,
-        pais: pais
-    });
-
-    var xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
-
-    xhr.addEventListener("readystatechange", function () {
-        if (this.readyState === 4) {
-            console.log(this.responseText);
-            var status = xhr.status;
-            alert(this.responseText);
-
-        }
-    });
-    xhr.open("POST", "http://127.0.0.1:5000/atualiza-dados", true);
-    xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
-
-    xhr.send(data);
-
-}
-
-
 
 document.querySelector('form').addEventListener('submit', validarFormulario);
 function validarFormulario(event) {
@@ -407,12 +329,17 @@ function validarFormulario(event) {
         input.setFocus();
     }
     event.preventDefault();
+    if (botaoClicado === "confirmar"){
+        inserirConta(); // se o formulário estiver válido, envia os dados
+    }else {
+        attConta();
+    }
     // previne o envio automático do formulário
 
     // valida os campos do formulário aqui
     // por exemplo, você pode verificar se os campos estão preenchidos corretamente, se o CPF/CNPJ é válido, etc.
-
-    inserirConta(); // se o formulário estiver válido, envia os dados
+    
+    
 }
 
 function inserirConta() {
@@ -507,7 +434,10 @@ async function pesquisarConta() {
                         if (registro.hasOwnProperty(propriedade)) {
                             var tdElement = document.createElement("td");
                             if (propriedade == "id") {
-                                tdElement.onclick = ""
+                                tdElement.classList.add("tdElement");
+                                tdElement.addEventListener("click", function(){
+                                    editarConta(this.innerText);
+                                });
                             }
                             tdElement.innerText = registro[propriedade];
                             trElement.appendChild(tdElement);
@@ -539,7 +469,7 @@ async function pesquisarConta() {
 
 function pesquisarContaPorID(id) {
     return new Promise(function (resolve, reject) {
-    var data = JSON.stringify({ id: pesquisar.value });
+    var data = JSON.stringify({ id: id });
     var xhr = new XMLHttpRequest();
     xhr.withCredentials = true;
 
@@ -564,13 +494,121 @@ function pesquisarContaPorID(id) {
     });
 }
 
-async function editarConta(id) {
-    window.open("cadastroConta.html", '_blank');
-    var conta = await pesquisarContaPorID(id);
+function attConta() {
     var cpf_cnpj = document.getElementById("clienteCPF_CNPJ").value;
     var valor = document.getElementById("valor").value.replace("R$ ", "").replace(".", "").replace(",", ".").replace(" ", "");
     var data_emissao = document.getElementById("data_emissao").value;
     var data_vencimento = document.getElementById("data_vencimento").value;
-    var servico = document.getElementById("servicos").selectedOptions[0].value;
-    
+    var servico = parseInt(document.getElementById("servicos").selectedOptions[0].value);
+    var idElement = parseInt(document.getElementById("idElement").innerText);
+    var status = document.getElementById("status").selectedOptions[0].text.toLowerCase();
+
+
+
+    var data = JSON.stringify({
+        cpf_cnpj: cpf_cnpj,
+        valor: valor,
+        data_emissao: data_emissao,
+        data_vencimento: data_vencimento,
+        servico: servico,
+        id: idElement,
+        status: status
+    });
+
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+
+    xhr.addEventListener("readystatechange", function () {
+        if (this.readyState === 4) {
+            console.log(this.responseText);
+            alert(this.responseText);
+            window.close();
+
+        }
+    });
+    xhr.open("POST", "http://127.0.0.1:5000/atualiza-receber", true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+
+    xhr.send(data);
 }
+
+function editarConta(id) {
+       var novaJanela = window.open("cadastroConta.html", '_blank');
+        novaJanela.addEventListener('load', async function(){
+            //Botões
+            var conta = await pesquisarContaPorID(parseInt(id));
+            var botaoVoltar = novaJanela.document.getElementById("voltaPaginaInicial");
+            var botaoCofirmar = novaJanela.document.getElementById("confirmar");
+            var botaoCancelar = novaJanela.document.getElementById("cancelar");
+            var botaoExcluir = novaJanela.document.getElementById("excluir");
+            var botaoAlterar = novaJanela.document.getElementById("alterar");
+
+            botaoAlterar.style.display = "block";
+            botaoExcluir.style.display = "block";
+            botaoCancelar.style.display = "block";
+            botaoCofirmar.style.display = "none";
+            botaoVoltar.style.display = "none";
+
+            //Elementos
+            var divId = novaJanela.document.getElementById("divId");
+            var idElement = novaJanela.document.getElementById("idElement");
+            var cpf_cnpj = novaJanela.document.getElementById("clienteCPF_CNPJ");
+            var nomeCliente = novaJanela.document.getElementById("nomeCliente");
+            var data_emissao = novaJanela.document.getElementById("data_emissao");
+            var data_vencimento = novaJanela.document.getElementById("data_vencimento");
+            var valor = novaJanela.document.getElementById("valor");
+            var servico = novaJanela.document.getElementById("servicos");
+            var statusDiv = novaJanela.document.getElementById("statusDiv");
+            var status = novaJanela.document.getElementById("status");
+
+            divId.style.display = "block";
+            statusDiv.style.display = "block";
+            idElement.innerText = id;
+            cpf_cnpj.value = conta.cpf_cnpj;
+            nomeCliente.value = await pesquisarNomePorCPF_CNPJ(conta.cpf_cnpj);
+            valor.value = formatarMoeda(conta.valor);
+            data_emissao.value = new Date(conta.data_emissao).toISOString().split('T')[0];
+            data_vencimento.value = new Date(conta.data_vencimento).toISOString().split('T')[0];
+            servico.selectedIndex = conta.servicos_id - 1;
+            switch (conta.status){
+                case "em aberto":
+                    status.selectedIndex = 0;
+                    break;
+                case "pago":
+                    status.selectedIndex = 1;
+                    break;
+                case "em atraso":
+                    status.selectedIndex = 2;
+                    break;
+            }
+       })
+    }
+
+
+function deletaConta() {
+        if (confirm("Confirma a exclusão?")) {
+            var id = parseInt(document.getElementById("idElement").innerText);
+            var data = JSON.stringify({ id: id });
+    
+            var xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+    
+            xhr.addEventListener("readystatechange", function () {
+                if (this.readyState === 4) {
+                    console.log(this.responseText);
+                    alert(this.responseText);
+                    window.close();
+                }
+            });
+            xhr.open("DELETE", "http://127.0.0.1:5000/delete-conta", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+    
+            xhr.send(data);
+            
+        }
+    } 
+
+function cancelaEdicao(){
+    window.close();
+}
+

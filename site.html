@@ -68,8 +68,8 @@
   <a href="cadastro.html"><button>Novo Cadastro</button></a>
 
   <h1 class="corTexto">Contas a Receber</h1>
-  <input placeholder="Pesquisar pelo CPF/CNPJ" type="text" id="pesquisarConta" name="pesquisarConta" maxlength="250">
-  <div id="resultadoConta" style="display: flex;">
+  <input placeholder="Pesquisar pelo CPF/CNPJ ou Número da Fatura" type="text" id="pesquisarConta" name="pesquisarConta" maxlength="250">
+  <div id="resultadoConta" style="display: none;">
     <table id="tableResultado">
       <tr>
         <th class= "th" colspan="7" id="nomeCliente">Cliente: </th>
@@ -85,6 +85,7 @@
       </tr>
   </table>
   </div>
+  <button style="display: none" onclick="limparContas()" id="limparContas">Limpar</button>
   <button onclick="pesquisarConta()">Buscar</button>
   <a href="cadastroConta.html"><button>Adicionar Conta a Receber</button></a>
   <script src="javascript.js"></script>

@@ -370,7 +370,14 @@ def inserir_contas_receber():
 @app.route("/consulta-receber", methods=["POST"])
 def consulta_receber():
     data = request.get_json(force=True)
-    cpf_cnpj = data["cpf_cnpj"]
+    if data.get("cpf_cnpj") is not None:
+        cpf_cnpj = data["cpf_cnpj"]
+        sql = "SELECT * FROM contas_receber WHERE cpf_cnpj = %s"
+        valores = (cpf_cnpj,)
+    else:
+        id = data["id"]
+        sql = "SELECT * FROM contas_receber WHERE id = %s"
+        valores = (id,)
 
     conexao = mysql.connector.connect(
         host="localhost",
@@ -380,8 +387,7 @@ def consulta_receber():
     )
 
     cursor = conexao.cursor()
-    sql = "SELECT * FROM contas_receber WHERE cpf_cnpj = %s"
-    valores = (cpf_cnpj,)
+    
 
     try:
     
@@ -406,5 +412,68 @@ def consulta_receber():
     finally:
         # Fecha a conexão com o banco de dados
         conexao.close()
+
+@app.route("/atualiza-receber", methods=["POST"])
+def atualiza_receber():
+    data = request.get_json(force=True)
+    cpf_cnpj = data["cpf_cnpj"]
+    valor = data["valor"]
+    data_emissao = data["data_emissao"]
+    data_vencimento = data["data_vencimento"]
+    servico = data["servico"]
+    status = data["status"]    
+    id = data["id"]
+    sql = "UPDATE contas_receber set cpf_cnpj = %s, valor = %s, data_emissao = %s, data_vencimento = %s, servicos_id = %s, status = %s WHERE id = %s"
+    valores = (cpf_cnpj, valor, data_emissao, data_vencimento, servico, status, id)
+
+    conexao = mysql.connector.connect(
+        host="localhost",
+        user="wesley",
+        password="waa123",
+        database="banco_smart_monkey"
+    )
+
+    cursor = conexao.cursor()
+    
+
+    try:
+    
+        cursor.execute(sql, valores)
+        conexao.commit()
+        return "Conta atualizada com sucesso"
+
+    except Exception as e:
+        return f"Erro ao atualizar dados: {str(e)}"
+
+    finally:
+        conexao.close()
+
+@app.route("/delete-conta", methods=["DELETE"])
+def delete_conta():
+    data = request.get_json(force=True)
+    id = data["id"]
+    conexao = mysql.connector.connect(
+        host="localhost",
+        user="wesley",
+        password="waa123",
+        database="banco_smart_monkey"
+    )
+    cursor = conexao.cursor()
+
+    sql = "DELETE FROM contas_receber WHERE id = %s"
+    valores = (id,)
+
+    try:
+        cursor.execute(sql, valores)
+        conexao.commit()
+        return "Conta excluído com sucesso"
+    
+
+    except Exception as e:
+        return f"Erro ao deletar dados: {str(e)}"
+
+    finally:
+        conexao.close()
+
 if __name__ == "__main__":
     app.run(debug=True)
