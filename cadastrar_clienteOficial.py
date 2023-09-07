@@ -429,7 +429,6 @@ def atualiza_receber():
         cursor.execute(sql, valores)
         conexao.commit()
         return "Conta atualizada com sucesso"
-
     except Exception as e:
         return f"Erro ao atualizar dados: {str(e)}"
 

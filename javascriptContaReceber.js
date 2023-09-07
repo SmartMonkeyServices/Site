@@ -50,17 +50,16 @@ function onloadData() {
 
 function formataDataISO(data) {
     const dataFormatada = new Date(data);
-    const fusoHorario = dataFormatada.getTimezoneOffset() / 60; // Obtém o deslocamento de tempo em horas
-    dataFormatada.setHours(dataFormatada.getHours() - fusoHorario); // Ajusta para o fuso horário local
     return dataFormatada.toISOString().split('T')[0];
 
 }
 
 function formataData(data) {
-    data = new Date(data);
-    const dia = String(data.getDate()).padStart(2, '0');
-    const mes = String(data.getMonth() + 1).padStart(2, '0');
-    const ano = data.getFullYear();
+    data = new Date(data+"-0000");
+    data.setUTCHours(0, 0, 0, 0);
+    const dia = String(data.getUTCDate()).padStart(2, '0');
+    const mes = String(data.getUTCMonth() + 1).padStart(2, '0');
+    const ano = data.getUTCFullYear();
     const dataFormatada = `${dia}/${mes}/${ano}`;
     return dataFormatada
 }
@@ -338,17 +337,12 @@ function validarFormulario(event) {
         alert("Insira um valor válido")
         input.setFocus();
     }
-    event.preventDefault();
+    event.preventDefault(); // previne o envio automático do formulário
     if (botaoClicado === "confirmar") {
-        inserirConta(); // se o formulário estiver válido, envia os dados
+        inserirConta();
     } else {
         attConta();
     }
-    // previne o envio automático do formulário
-
-    // valida os campos do formulário aqui
-    // por exemplo, você pode verificar se os campos estão preenchidos corretamente, se o CPF/CNPJ é válido, etc.
-
 
 }
 
@@ -480,6 +474,9 @@ async function pesquisarConta() {
     xhr.send(data);
     if (pesquisar.value == "%%%"){
         document.getElementById("nomeCliente").style.display = "none";
+    }
+    else{
+       document.getElementById("nomeCliente").style.display = "table-cell";
     }
 
 }
@@ -617,7 +614,7 @@ function deletaConta() {
             if (this.readyState === 4) {
                 console.log(this.responseText);
                 alert(this.responseText);
-                window.close();
+                cancelaEdicao();
             }
         });
         xhr.open("DELETE", "http://127.0.0.1:5000/delete-conta", true);
@@ -632,5 +629,4 @@ function deletaConta() {
 function cancelaEdicao() {
     window.close();
 }
-
 

@@ -13,11 +13,9 @@
   
 }
 .inputs {
-    display: block; 
+  display: flex;
     width: 25%; 
     margin: 0 auto; 
- 
-  display: flex; 
   justify-content: flex-start; 
   align-items: center; 
   
