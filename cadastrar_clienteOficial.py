@@ -267,18 +267,13 @@ def consulta_servico():
             cursor.execute(sql, valores)
         else:
             cursor.execute(sql)
-        
-        # Obtém todas as linhas da consulta
+
         resultados = cursor.fetchall()
 
         if resultados:
-            # Obtém as informações das colunas selecionadas na consulta
             colunas = [col[0] for col in cursor.description]
-
-            # Cria uma lista de dicionários com os resultados da consulta
             dados = [dict(zip(colunas, linha)) for linha in resultados]
 
-            # Retorna os resultados da consulta em formato JSON
             return jsonify(dados)
         else:
             return "Nenhum serviço cadastrado"
@@ -288,7 +283,6 @@ def consulta_servico():
         return f"Erro ao consultar dados: {str(e)}"
 
     finally:
-        # Fecha a conexão com o banco de dados
         conexao.close()
 
 @app.route("/inserir-servicos", methods=["POST"])
@@ -296,7 +290,6 @@ def inserir_servicos():
     data = request.get_json(force=True)
     servico = data["servico"]
 
-    # Conecta ao banco de dados
     conexao = mysql.connector.connect(
         host="localhost",
         user="wesley",
@@ -304,14 +297,10 @@ def inserir_servicos():
         database="banco_smart_monkey"
     )
 
-    # Cria um cursor para executar comandos SQL
     cursor = conexao.cursor()
     consulta = "SELECT servico from servicos WHERE servico = %s"
 
-    # Define a consulta SQL para inserir dados na tabela "clientes"
     sql = "INSERT INTO servicos (servico) VALUES (%s)"
-
-    # Define os valores para os campos da tabela
     valores = (servico,)
 
     cursor.execute(consulta, valores)
@@ -320,10 +309,7 @@ def inserir_servicos():
         return "Serviço com mesmo nome já cadastrado"
     
     try:
-        # Executa a consulta SQL
         cursor.execute(sql, valores)
-
-        # Salva as alterações no banco de dados
         conexao.commit()
 
         return "Serviço cadastrado com sucesso"
@@ -370,15 +356,7 @@ def inserir_contas_receber():
 @app.route("/consulta-receber", methods=["POST"])
 def consulta_receber():
     data = request.get_json(force=True)
-    if data.get("cpf_cnpj") is not None:
-        cpf_cnpj = data["cpf_cnpj"]
-        sql = "SELECT * FROM contas_receber WHERE cpf_cnpj = %s"
-        valores = (cpf_cnpj,)
-    else:
-        id = data["id"]
-        sql = "SELECT * FROM contas_receber WHERE id = %s"
-        valores = (id,)
-
+    
     conexao = mysql.connector.connect(
         host="localhost",
         user="wesley",
@@ -390,17 +368,27 @@ def consulta_receber():
     
 
     try:
-    
-        cursor.execute(sql, valores)
+        if data.get("cpf_cnpj") is not None:
+            cpf_cnpj = data["cpf_cnpj"]
+            sql = "SELECT * FROM contas_receber WHERE cpf_cnpj = %s ORDER BY id"
+            valores = (cpf_cnpj,)
+            cursor.execute(sql, valores)
+
+        elif data.get("id") is not None:
+            id = data["id"]
+            sql = "SELECT * FROM contas_receber WHERE id = %s"
+            valores = (id,)
+            cursor.execute(sql, valores)
+
+        else:
+            sql = "SELECT * FROM contas_receber ORDER BY id"
+            cursor.execute(sql)
+
         resultados = cursor.fetchall()
 
         if resultados:
-            # Obtém as informações das colunas selecionadas na consulta
             colunas = [col[0] for col in cursor.description]
-
-            # Cria uma lista de dicionários com os resultados da consulta
             dados = [dict(zip(colunas, linha)) for linha in resultados]
-            # Retorna os resultados da consulta em formato JSON
             return jsonify(dados)
         else:
             return "Nenhum conta a receber encontrada"

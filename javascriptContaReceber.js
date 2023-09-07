@@ -48,6 +48,14 @@ function onloadData() {
 
 }
 
+function formataDataISO(data) {
+    const dataFormatada = new Date(data);
+    const fusoHorario = dataFormatada.getTimezoneOffset() / 60; // Obtém o deslocamento de tempo em horas
+    dataFormatada.setHours(dataFormatada.getHours() - fusoHorario); // Ajusta para o fuso horário local
+    return dataFormatada.toISOString().split('T')[0];
+
+}
+
 function formataData(data) {
     data = new Date(data);
     const dia = String(data.getDate()).padStart(2, '0');
@@ -178,6 +186,7 @@ async function onchangeCliente(validacao) {
             else {
                 nomeCliente.innerText += retornoNome;
             }
+            pesquisarElement.value = pesquisar;
         }
         else {
             alert("CPF inválido")
@@ -189,7 +198,7 @@ async function onchangeCliente(validacao) {
     }
     else if (pesquisar.length == 14) {
         if (validaCNPJ(pesquisar)) {
-            pesquisar = pesquisar.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5")
+            pesquisar = pesquisar.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
             retornoNome = await pesquisarNomePorCPF_CNPJ(pesquisar);
             if (validacao == null) {
                 nomeCliente.value = retornoNome;
@@ -197,6 +206,7 @@ async function onchangeCliente(validacao) {
             else {
                 nomeCliente.innerText += retornoNome;
             }
+            pesquisarElement.value = pesquisar;
         }
         else {
             nomeCliente.value = "";
@@ -329,17 +339,17 @@ function validarFormulario(event) {
         input.setFocus();
     }
     event.preventDefault();
-    if (botaoClicado === "confirmar"){
+    if (botaoClicado === "confirmar") {
         inserirConta(); // se o formulário estiver válido, envia os dados
-    }else {
+    } else {
         attConta();
     }
     // previne o envio automático do formulário
 
     // valida os campos do formulário aqui
     // por exemplo, você pode verificar se os campos estão preenchidos corretamente, se o CPF/CNPJ é válido, etc.
-    
-    
+
+
 }
 
 function inserirConta() {
@@ -390,28 +400,30 @@ async function pesquisarConta() {
     while (trElements.length > 2) {
         tableElement.removeChild(trElements[2]);
     }
-    pesquisar.value = pesquisar.value.replace(/\D/g, "")
-    if (pesquisar.value == null || pesquisar.value == "") {
-        alert("Insira algum termo para pesquisa")
-        return
-    }
-    if (pesquisar.value.length == 11 || pesquisar.value.length == 14) {
-        var validaCliente = await onchangeCliente(pesquisar);
-        if (validaCliente.sucess == true) {
-            var data = JSON.stringify({ cpf_cnpj: validaCliente.pesquisar });
+    if (pesquisar.value != "%%%") {
+        pesquisar.value = pesquisar.value.replace(/\D/g, "")
+        if (pesquisar.value == null || pesquisar.value == "") {
+            alert("Insira algum termo para pesquisa")
+            return
         }
+        if (pesquisar.value.length == 11 || pesquisar.value.length == 14) {
+            var validaCliente = await onchangeCliente(pesquisar);
+            if (validaCliente.sucess == true) {
+                var data = JSON.stringify({ cpf_cnpj: validaCliente.pesquisar });
+            }
 
+        }
+        else {
+            var data = JSON.stringify({ id: pesquisar.value });
+        }
+    }else {
+        var data = JSON.stringify({ all: "*" });
     }
-    else {
-        var data = JSON.stringify({ id: pesquisar.value });
-    }
-
-
 
     var xhr = new XMLHttpRequest();
     xhr.withCredentials = true;
 
-    xhr.addEventListener("readystatechange", function () {
+    xhr.addEventListener("readystatechange", async function () {
         if (this.readyState === 4) {
             console.log(this.responseText);
             if (this.responseText != "Nenhum conta a receber encontrada") {
@@ -419,8 +431,9 @@ async function pesquisarConta() {
                 limparBotao.style.display = "block";
                 jsonResponse = JSON.parse(this.responseText)
                 onchangeCliente(jsonResponse[0].cpf_cnpj);
-                jsonResponse.forEach(async function (registro) {
-                    registro = {
+
+                async function processaRegistro(registro) {
+                    return {
                         "id": registro.id,
                         "cpf_cnpj": registro.cpf_cnpj,
                         "data_emissao": formataData(registro.data_emissao),
@@ -428,14 +441,24 @@ async function pesquisarConta() {
                         "servicos_contratados": await consultaAsyncServico(registro.servicos_id),
                         "valor": formatarMoeda(registro.valor),
                         "status": formatarTextoUpper(registro.status)
-                    }
+                    };
+                }
+                const resultadosProcessados = [];
+                for (const registro of jsonResponse) {
+                    const registroProcessado = await processaRegistro(registro);
+                    resultadosProcessados.push(registroProcessado);
+                }
+                resultadosProcessados.sort(function (a, b) {
+                    return a.id - b.id;
+                });
+                resultadosProcessados.forEach(function (registro) {
                     var trElement = document.createElement("tr");
                     for (var propriedade in registro) {
                         if (registro.hasOwnProperty(propriedade)) {
                             var tdElement = document.createElement("td");
                             if (propriedade == "id") {
                                 tdElement.classList.add("tdElement");
-                                tdElement.addEventListener("click", function(){
+                                tdElement.addEventListener("click", function () {
                                     editarConta(this.innerText);
                                 });
                             }
@@ -444,52 +467,46 @@ async function pesquisarConta() {
                         }
                     }
                     tableElement.appendChild(trElement);
-                    //tableElement.className ="table";
-
                 });
-
-
-
-
-            }
-            else {
+            } else {
                 divResultadoConta.style.display = "none";
                 alert(this.responseText);
             }
-
         }
     });
     xhr.open("POST", "http://127.0.0.1:5000/consulta-receber", true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 
     xhr.send(data);
-
+    if (pesquisar.value == "%%%"){
+        document.getElementById("nomeCliente").style.display = "none";
+    }
 
 }
 
 function pesquisarContaPorID(id) {
     return new Promise(function (resolve, reject) {
-    var data = JSON.stringify({ id: id });
-    var xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
+        var data = JSON.stringify({ id: id });
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
 
-    xhr.addEventListener("readystatechange", function () {
-        if (this.readyState === 4) {
-            console.log(this.responseText);
-            if (this.responseText != "Nenhum conta a receber encontrada") {
-                jsonResponse = JSON.parse(this.responseText)
-                resolve(jsonResponse[0]);
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                console.log(this.responseText);
+                if (this.responseText != "Nenhum conta a receber encontrada") {
+                    jsonResponse = JSON.parse(this.responseText)
+                    resolve(jsonResponse[0]);
+                }
+                else {
+                    alert(this.responseText);
+                }
+
             }
-            else {
-                alert(this.responseText);
-            }
+        });
+        xhr.open("POST", "http://127.0.0.1:5000/consulta-receber", true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 
-        }
-    });
-    xhr.open("POST", "http://127.0.0.1:5000/consulta-receber", true);
-    xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
-
-    xhr.send(data);
+        xhr.send(data);
 
     });
 }
@@ -533,82 +550,87 @@ function attConta() {
 }
 
 function editarConta(id) {
-       var novaJanela = window.open("cadastroConta.html", '_blank');
-        novaJanela.addEventListener('load', async function(){
-            //Botões
-            var conta = await pesquisarContaPorID(parseInt(id));
-            var botaoVoltar = novaJanela.document.getElementById("voltaPaginaInicial");
-            var botaoCofirmar = novaJanela.document.getElementById("confirmar");
-            var botaoCancelar = novaJanela.document.getElementById("cancelar");
-            var botaoExcluir = novaJanela.document.getElementById("excluir");
-            var botaoAlterar = novaJanela.document.getElementById("alterar");
+    var novaJanela = window.open("cadastroConta.html", '_blank');
+    novaJanela.addEventListener('load', async function () {
+        //Botões
+        var conta = await pesquisarContaPorID(parseInt(id));
+        var botaoVoltar = novaJanela.document.getElementById("voltaPaginaInicial");
+        var botaoCofirmar = novaJanela.document.getElementById("confirmar");
+        var botaoCancelar = novaJanela.document.getElementById("cancelar");
+        var botaoExcluir = novaJanela.document.getElementById("excluir");
+        var botaoAlterar = novaJanela.document.getElementById("alterar");
 
-            botaoAlterar.style.display = "block";
-            botaoExcluir.style.display = "block";
-            botaoCancelar.style.display = "block";
-            botaoCofirmar.style.display = "none";
-            botaoVoltar.style.display = "none";
+        botaoAlterar.style.display = "block";
+        botaoExcluir.style.display = "block";
+        botaoCancelar.style.display = "block";
+        botaoCofirmar.style.display = "none";
+        botaoVoltar.style.display = "none";
 
-            //Elementos
-            var divId = novaJanela.document.getElementById("divId");
-            var idElement = novaJanela.document.getElementById("idElement");
-            var cpf_cnpj = novaJanela.document.getElementById("clienteCPF_CNPJ");
-            var nomeCliente = novaJanela.document.getElementById("nomeCliente");
-            var data_emissao = novaJanela.document.getElementById("data_emissao");
-            var data_vencimento = novaJanela.document.getElementById("data_vencimento");
-            var valor = novaJanela.document.getElementById("valor");
-            var servico = novaJanela.document.getElementById("servicos");
-            var statusDiv = novaJanela.document.getElementById("statusDiv");
-            var status = novaJanela.document.getElementById("status");
+        //Elementos
+        var divId = novaJanela.document.getElementById("divId");
+        var idElement = novaJanela.document.getElementById("idElement");
+        var cpf_cnpj = novaJanela.document.getElementById("clienteCPF_CNPJ");
+        var nomeCliente = novaJanela.document.getElementById("nomeCliente");
+        var data_emissao = novaJanela.document.getElementById("data_emissao");
+        var data_vencimento = novaJanela.document.getElementById("data_vencimento");
+        var valor = novaJanela.document.getElementById("valor");
+        var servico = novaJanela.document.getElementById("servicos");
+        var statusDiv = novaJanela.document.getElementById("statusDiv");
+        var status = novaJanela.document.getElementById("status");
 
-            divId.style.display = "block";
-            statusDiv.style.display = "block";
-            idElement.innerText = id;
-            cpf_cnpj.value = conta.cpf_cnpj;
-            nomeCliente.value = await pesquisarNomePorCPF_CNPJ(conta.cpf_cnpj);
-            valor.value = formatarMoeda(conta.valor);
-            data_emissao.value = new Date(conta.data_emissao).toISOString().split('T')[0];
-            data_vencimento.value = new Date(conta.data_vencimento).toISOString().split('T')[0];
-            servico.selectedIndex = conta.servicos_id - 1;
-            switch (conta.status){
-                case "em aberto":
-                    status.selectedIndex = 0;
-                    break;
-                case "pago":
-                    status.selectedIndex = 1;
-                    break;
-                case "em atraso":
-                    status.selectedIndex = 2;
-                    break;
-            }
-       })
-    }
+        divId.style.display = "block";
+        statusDiv.style.display = "block";
+        idElement.innerText = id;
+        cpf_cnpj.value = conta.cpf_cnpj;
+        nomeCliente.value = await pesquisarNomePorCPF_CNPJ(conta.cpf_cnpj);
+        valor.value = formatarMoeda(conta.valor);
+        data_emissao.value = formataDataISO(conta.data_emissao);
+        data_vencimento.value = formataDataISO(conta.data_vencimento);
+        servico.selectedIndex = conta.servicos_id - 1;
+        switch (conta.status) {
+            case "em aberto":
+                status.selectedIndex = 0;
+                break;
+            case "pago":
+                status.selectedIndex = 1;
+                break;
+            case "em atraso":
+                status.selectedIndex = 2;
+                break;
+        }
+    })
+    novaJanela.addEventListener('beforeunload', function(){
+        pesquisarConta();
+    })
+}
 
 
 function deletaConta() {
-        if (confirm("Confirma a exclusão?")) {
-            var id = parseInt(document.getElementById("idElement").innerText);
-            var data = JSON.stringify({ id: id });
-    
-            var xhr = new XMLHttpRequest();
-            xhr.withCredentials = true;
-    
-            xhr.addEventListener("readystatechange", function () {
-                if (this.readyState === 4) {
-                    console.log(this.responseText);
-                    alert(this.responseText);
-                    window.close();
-                }
-            });
-            xhr.open("DELETE", "http://127.0.0.1:5000/delete-conta", true);
-            xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
-    
-            xhr.send(data);
-            
-        }
-    } 
+    if (confirm("Confirma a exclusão?")) {
+        var id = parseInt(document.getElementById("idElement").innerText);
+        var data = JSON.stringify({ id: id });
 
-function cancelaEdicao(){
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                console.log(this.responseText);
+                alert(this.responseText);
+                window.close();
+            }
+        });
+        xhr.open("DELETE", "http://127.0.0.1:5000/delete-conta", true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+
+        xhr.send(data);
+        
+
+    }
+}
+
+function cancelaEdicao() {
     window.close();
 }
+
 
