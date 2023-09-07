@@ -630,3 +630,47 @@ function cancelaEdicao() {
     window.close();
 }
 
+function aumentarFonte(){
+    var botao = document.getElementById("aumentarDimunirFonte");
+    var todosElementos = document.querySelectorAll('*');
+
+    if (botao.innerText.toLowerCase() == "aumentar fonte"){
+        todosElementos.forEach(function(elemento){
+            // Obtenha o estilo atual da fonte
+            var estiloFonte = window.getComputedStyle(elemento, null);
+        
+        // Obtenha o tamanho da fonte atual
+            var tamanhoFonteAtual = parseInt(estiloFonte.getPropertyValue('font-size'));
+      
+        // Aumente o tamanho da fonte em 50%
+            var novoTamanhoFonte = tamanhoFonteAtual * 1.5;
+            
+        // Aplique o novo tamanho da fonte ao elemento HTML
+            elemento.style.fontSize = novoTamanhoFonte + 'px';
+            if (elemento.tagName.toLowerCase() !== "img" && elemento.tagName.toLowerCase() !== "th"){
+                 //elemento.style.width = "100%";
+            }
+        });
+        botao.innerText = "Diminuir fonte";
+    }
+    else {
+        todosElementos.forEach(function(elemento){
+            // Obtenha o estilo atual da fonte
+            var estiloFonte = window.getComputedStyle(elemento, null);
+        
+        // Obtenha o tamanho da fonte atual
+            var tamanhoFonteAtual = parseInt(estiloFonte.getPropertyValue('font-size'));
+      
+        // Aumente o tamanho da fonte em 50%
+            var novoTamanhoFonte = tamanhoFonteAtual - (tamanhoFonteAtual/3);
+            
+        // Aplique o novo tamanho da fonte ao elemento HTML
+            elemento.style.fontSize = novoTamanhoFonte + 'px';
+            if (elemento.tagName.toLowerCase() !== "img"){
+                //  elemento.style.width = "50%";
+                //  elemento.style.margin = "0 auto";
+            }
+        });
+        botao.innerText = "Aumentar fonte";
+    }
+}
