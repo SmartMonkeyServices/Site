@@ -6,9 +6,13 @@
   <link rel="stylesheet" href="cascading.css">
 
 </head>
-
-<body>
+<header>
   <img src="logo site.jpg" alt="Logo da empresa" width="300" height="100" style="display:block; margin: 0 auto;">
+  <div class="divButton">
+  <button onclick="aumentarDiminuirFonte()" id="aumentarDimunirFonte" class="fontButton">Aumentar fonte</button>
+  </div>
+</header>
+<body>
   <h1 class="corTexto" tabindex="0">Clientes</h1>
 
   <input placeholder="Pesquisar pelo CPF/CNPJ" type="text" id="pesquisar" name="pesquisar" maxlength="250">
@@ -69,7 +73,7 @@
 
   <h1 class="corTexto" tabindex="0">Contas a Receber</h1>
   <input placeholder="Pesquisar pelo CPF/CNPJ, Número da Fatura ou %%% para todas faturas" type="text" id="pesquisarConta" name="pesquisarConta" maxlength="250">
-  <div id="resultadoConta" style="display: none;">
+  <div class="div" id="resultadoConta" style="display: none;">
     <table id="tableResultado">
       <tr>
         <th class= "th" colspan="7" id="nomeCliente">Cliente: </th>
@@ -88,7 +92,6 @@
   <button style="display: none" onclick="limparContas()" id="limparContas">Limpar</button>
   <button onclick="pesquisarConta()">Buscar</button>
   <a href="cadastroConta.html"><button>Adicionar Conta a Receber</button></a>
-  <button onclick="aumentarFonte()" id="aumentarDimunirFonte">Aumentar fonte</button>
   <script src="javascript.js"></script>
   <script src="javascriptContaReceber.js"></script>
 

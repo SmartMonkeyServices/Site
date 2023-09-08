@@ -5,8 +5,13 @@
     <link rel="stylesheet" href="cascading.css">
 
   </head>
-  <body>
+  <header>
     <img src="logo site.jpg" alt="Logo da empresa" width="300" height="100" style="display:block; margin: 0 auto;">
+    <div class="divButton">
+      <button onclick="aumentarDiminuirFonte()" id="aumentarDimunirFonte" class="fontButton">Aumentar fonte</button>
+    </div>
+  </header>
+  <body>
     <form>
       <label for="cpf_cnpj">CPF/CNPJ</label>
       <input type="text" id="cpf_cnpj" name="cpf_cnpj" onchange="onchangeCPF_CNPJ()" required>

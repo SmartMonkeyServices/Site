@@ -630,47 +630,20 @@ function cancelaEdicao() {
     window.close();
 }
 
-function aumentarFonte(){
+function aumentarDiminuirFonte(){
+    var zoomAtual = parseFloat(document.body.style.zoom) || 1.0;
+    var table = document.getElementById("tableResultado")
     var botao = document.getElementById("aumentarDimunirFonte");
-    var todosElementos = document.querySelectorAll('*');
 
     if (botao.innerText.toLowerCase() == "aumentar fonte"){
-        todosElementos.forEach(function(elemento){
-            // Obtenha o estilo atual da fonte
-            var estiloFonte = window.getComputedStyle(elemento, null);
-        
-        // Obtenha o tamanho da fonte atual
-            var tamanhoFonteAtual = parseInt(estiloFonte.getPropertyValue('font-size'));
-      
-        // Aumente o tamanho da fonte em 50%
-            var novoTamanhoFonte = tamanhoFonteAtual * 1.5;
-            
-        // Aplique o novo tamanho da fonte ao elemento HTML
-            elemento.style.fontSize = novoTamanhoFonte + 'px';
-            if (elemento.tagName.toLowerCase() !== "img" && elemento.tagName.toLowerCase() !== "th"){
-                 //elemento.style.width = "100%";
-            }
-        });
+        zoomAtual += 1;
+        document.body.style.zoom = zoomAtual;
         botao.innerText = "Diminuir fonte";
-    }
-    else {
-        todosElementos.forEach(function(elemento){
-            // Obtenha o estilo atual da fonte
-            var estiloFonte = window.getComputedStyle(elemento, null);
-        
-        // Obtenha o tamanho da fonte atual
-            var tamanhoFonteAtual = parseInt(estiloFonte.getPropertyValue('font-size'));
-      
-        // Aumente o tamanho da fonte em 50%
-            var novoTamanhoFonte = tamanhoFonteAtual - (tamanhoFonteAtual/3);
-            
-        // Aplique o novo tamanho da fonte ao elemento HTML
-            elemento.style.fontSize = novoTamanhoFonte + 'px';
-            if (elemento.tagName.toLowerCase() !== "img"){
-                //  elemento.style.width = "50%";
-                //  elemento.style.margin = "0 auto";
-            }
-        });
+        table.style.width = "100%";
+    }else{
+        zoomAtual -= 1;
+        document.body.style.zoom = zoomAtual;
         botao.innerText = "Aumentar fonte";
+        table.style.width = "50%";
     }
 }

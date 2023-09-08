@@ -54,10 +54,10 @@ text-align: left;
 } */
 
 table{
-  width: 75%;
+  width: 50%;
     margin: 0 auto;
-  display: block; 
-  justify-content:left; 
+  display: block;
+  justify-content:center; 
   align-items:center;
 }
 
@@ -81,3 +81,38 @@ td{
   color: aquamarine;
 }
 
+.div{
+  width: 100%;
+}
+
+.fontButton {
+  background-color: #007bff; /* Cor de fundo do botão + */
+  color: #fff; /* Cor do texto do botão + */
+  border: none;
+  border-radius: 45%; /* Para tornar o botão circular */
+  width: 100px; /* Largura do botão + */
+  height: 32px; /* Altura do botão + */
+  cursor: pointer;
+margin: 0 auto;
+display: block; 
+justify-content:center; 
+align-items:center;
+}
+
+.divButton{
+  width: 58%;
+  margin-bottom: 10px;
+}
+.fontButton {
+  background-color: #007bff; /* Cor de fundo do botão + */
+  color: #fff; /* Cor do texto do botão + */
+  border: none;
+  border-radius: 45%; /* Para tornar o botão circular */
+  width: 100px; /* Largura do botão + */
+  height: 32px; /* Altura do botão + */
+  cursor: pointer;
+margin: 0 auto;
+display: block; 
+justify-content:center; 
+align-items:center;
+}

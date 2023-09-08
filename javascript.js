@@ -378,3 +378,20 @@ xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 xhr.send(data);
 
 }
+function aumentarDiminuirFonte(){
+  var zoomAtual = parseFloat(document.body.style.zoom) || 1.0;
+  var table = document.getElementById("tableResultado")
+  var botao = document.getElementById("aumentarDimunirFonte");
+
+  if (botao.innerText.toLowerCase() == "aumentar fonte"){
+      zoomAtual += 1;
+      document.body.style.zoom = zoomAtual;
+      botao.innerText = "Diminuir fonte";
+      table.style.width = "100%";
+  }else{
+      zoomAtual -= 1;
+      document.body.style.zoom = zoomAtual;
+      botao.innerText = "Aumentar fonte";
+      table.style.width = "50%";
+  }
+}

@@ -6,13 +6,18 @@
     <link rel="stylesheet" href="cssContaReceber.css">
 
 </head>
+<header>
+    <img src="logo site.jpg" alt="Logo da empresa" width="300" height="100" style="display:block; margin: 0 auto;">
+    <div class="divButton">
+        <button onclick="aumentarDiminuirFonte()" id="aumentarDimunirFonte" class="fontButton">Aumentar fonte</button>
+    </div>
+</header>
 
 <body onload="onloadServicos(), onloadData()">
-    <img src="logo site.jpg" alt="Logo da empresa" width="300" height="100" style="display:block; margin: 0 auto;">
     <form>
         <div id="divId" style="display: none;">
             <label class="label" for="idElement">Número do fatura</label>
-        <b class="inputs" id="idElement" name="idElement"></b>
+            <b class="inputs" id="idElement" name="idElement"></b>
         </div>
         <label class="label" for="clienteCPF_CNPJ">Cliente</label>
         <div class="campo-container">
@@ -36,7 +41,8 @@
         </div>
         <div class="campo-container">
             <label for="servico">Serviços Contratados</label>
-            <button class="add-button" type="button" title="Adicionar um novo serviço" onclick="abrirFecharAba()">+</button>
+            <button class="add-button" type="button" title="Adicionar um novo serviço"
+                onclick="abrirFecharAba()">+</button>
         </div>
         <div id="aba" style="display:none;">
             <h4>Adicionar Serviço</h4>
@@ -47,19 +53,19 @@
         <select class="inputs" type="text" id="servicos" name="servicos">
         </select>
         <div id="statusDiv" style="display: none;">
-        <label class="label" for="status">Status</label>
-        <div class="input">
-            <select type="date" id="status" name="status">
-            <option value="0">Em Aberto</option>
-            <option value="1">Pago</option>
-            <option value="2">Em Atraso</option>
-            </select>
-            
-        </div>
+            <label class="label" for="status">Status</label>
+            <div class="input">
+                <select type="date" id="status" name="status">
+                    <option value="0">Em Aberto</option>
+                    <option value="1">Pago</option>
+                    <option value="2">Em Atraso</option>
+                </select>
+
+            </div>
         </div>
 
         <button type="submit" id="alterar" style="display: none" onclick="setBotaoClicado('alterar')">Alterar</button>
-        <button type="submit" id="confirmar"onclick="setBotaoClicado('confirmar')">Confirmar</button>
+        <button type="submit" id="confirmar" onclick="setBotaoClicado('confirmar')">Confirmar</button>
     </form>
     <button id="excluir" onclick="deletaConta()" style="display: none;">Excluir</button>
     <button id="cancelar" onclick="cancelaEdicao()" style="display: none;">Cancelar</button>

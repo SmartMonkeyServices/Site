@@ -70,3 +70,20 @@ align-items:center;
   margin-left: 4px;
 }
 
+.divButton{
+  width: 82%;
+  margin-bottom: 10px;
+}
+.fontButton {
+  background-color: #007bff; /* Cor de fundo do botão + */
+  color: #fff; /* Cor do texto do botão + */
+  border: none;
+  border-radius: 45%; /* Para tornar o botão circular */
+  width: 100px; /* Largura do botão + */
+  height: 32px; /* Altura do botão + */
+  cursor: pointer;
+margin: 0 auto;
+display: block; 
+justify-content:center; 
+align-items:center;
+}
