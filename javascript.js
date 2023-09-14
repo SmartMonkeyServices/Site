@@ -395,3 +395,9 @@ function aumentarDiminuirFonte(){
       table.style.width = "50%";
   }
 }
+
+function limparClientes(){
+  document.getElementById("divResultado").style.display = "none";
+  document.getElementById("pesquisar").value = "";
+
+}
