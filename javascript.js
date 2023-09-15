@@ -152,7 +152,6 @@ function validaCNPJ(cnpj) {
       var email = document.getElementById("email").value;
       var telefone = document.getElementById("telefone").value;
       var celular = document.getElementById("celular").value;
-      var servicos = document.getElementById("servicos").value;
       var CEP = document.getElementById("CEP").value;
       var logradouro = document.getElementById("logradouro").value;
       var complemento = document.getElementById("complemento").value;
@@ -170,7 +169,6 @@ function validaCNPJ(cnpj) {
     email: email,
     telefone: telefone,
     celular: celular,
-    servicos: servicos,
     CEP: CEP,
     logradouro: logradouro,
     complemento: complemento,
@@ -188,6 +186,11 @@ function validaCNPJ(cnpj) {
     if(this.readyState === 4) {
       console.log(this.responseText);
       alert(this.responseText);
+      var elementos = document.getElementsByTagName("input");
+            for (var i = 0; i < elementos.length; i++) {
+                elementos[i].value = "";
+
+            }
 
     }
   });
@@ -233,7 +236,7 @@ function pesquisar(){
   var rNomeFantasia = document.getElementById("rNomeFantasia");
   var rTelefone = document.getElementById("rTelefone");
   var rCelular = document.getElementById("rCelular");
-  var rServicos = document.getElementById("rServicos");
+  //var rServicos = document.getElementById("rServicos");
   var rEmail = document.getElementById("rEmail");
   var rCep = document.getElementById("rCep");
   var rLogradouro = document.getElementById("rLogradouro");
@@ -297,7 +300,7 @@ function pesquisar(){
 
         rTelefone.value = jsonResponse[0].telefone;
         rCelular.value = jsonResponse[0].celular;
-        rServicos.value = jsonResponse[0].servicos;
+        // rServicos.value = jsonResponse[0].servicos;
         rEmail.value = jsonResponse[0].email;
         rCep.value = jsonResponse[0].cep;
         rLogradouro.value = jsonResponse[0].logradouro;
@@ -333,7 +336,6 @@ function atualizaDados() {
     var email = document.getElementById("rEmail").value;
     var telefone = document.getElementById("rTelefone").value;
     var celular = document.getElementById("rCelular").value;
-    var servicos = document.getElementById("rServicos").value;
     var CEP = document.getElementById("rCep").value;
     var logradouro = document.getElementById("rLogradouro").value;
     var complemento = document.getElementById("rComplemento").value;
@@ -350,7 +352,6 @@ var data = JSON.stringify({
   email: email,
   telefone: telefone,
   celular: celular,
-  servicos: servicos,
   CEP: CEP,
   logradouro: logradouro,
   complemento: complemento,

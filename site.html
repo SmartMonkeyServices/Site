@@ -40,11 +40,11 @@
     <label for="email">E-mail</label>
     <input id="rEmail" name="email" type="text">
 
-    <label for="servicos">Serviços Contratados</label>
-    <input type="text" id="rServicos" name="servicos">
+    <!-- <label for="servicos">Serviços Contratados</label>
+    <input type="text" id="rServicos" name="servicos" readonly style="background-color: rgb(212, 208, 208);"> -->
 
     <label for="CEP">CEP</label>
-    <input id="rCep" name="CEP" type="text">
+    <input id="rCep" name="CEP" type="text" onchange="cepOnchange()">
 
     <label for="logradouro">Logradouro</label>
     <input id="rLogradouro" name="logradouro" type="text">

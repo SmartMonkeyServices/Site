@@ -38,6 +38,7 @@ function abrirFecharAba() {
 function limparContas() {
     document.getElementById("limparContas").style.display = "none";
     document.getElementById("resultadoConta").style.display = "none";
+    document.getElementById("pesquisarConta").value = "";
 }
 function onloadData() {
     const data = new Date();
