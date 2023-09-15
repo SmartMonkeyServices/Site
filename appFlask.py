@@ -14,7 +14,6 @@ def inserir_dados():
     email = data.get("email", "")
     telefone = data.get("telefone", "")
     celular = data.get("celular", "")
-    servicos = data.get("servicos", "")
     cep = data["CEP"]
     logradouro = data["logradouro"]
     complemento = data.get("complemento", "")
@@ -26,20 +25,21 @@ def inserir_dados():
 
     # Conecta ao banco de dados
     conexao = mysql.connector.connect(
-        host="localhost",
-        user="wesley",
-        password="waa123",
-        database="banco_smart_monkey"
+        host="containers-us-west-67.railway.app",
+        user="root",
+        password="NDCAVLFLa47wLwd4D8q3",
+        database="railway",
+        port="7664"
     )
 
     # Cria um cursor para executar comandos SQL
     cursor = conexao.cursor()
 
     # Define a consulta SQL para inserir dados na tabela "clientes"
-    sql = "INSERT INTO clientes (cpf_cnpj, nome_razao_social, nome_fantasia, email, telefone, celular, servicos, cep, logradouro, complemento, numero, bairro, cidade, estado, pais) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    sql = "INSERT INTO clientes (cpf_cnpj, nome_razao_social, nome_fantasia, email, telefone, celular, cep, logradouro, complemento, numero, bairro, cidade, estado, pais) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
     # Define os valores para os campos da tabela
-    valores = (cpf_cnpj, nome_razao_social, nome_fantasia, email, telefone, celular, servicos, cep, logradouro, complemento, numero, bairro, cidade, estado, pais)
+    valores = (cpf_cnpj, nome_razao_social, nome_fantasia, email, telefone, celular, cep, logradouro, complemento, numero, bairro, cidade, estado, pais)
 
     try:
         # Executa a consulta SQL
@@ -65,10 +65,11 @@ def delete_dados():
     
     # Conecta ao banco de dados
     conexao = mysql.connector.connect(
-        host="localhost",
-        user="wesley",
-        password="waa123",
-        database="banco_smart_monkey"
+        host="containers-us-west-67.railway.app",
+        user="root",
+        password="NDCAVLFLa47wLwd4D8q3",
+        database="railway",
+        port="7664"
     )
 
     # Cria um cursor para executar comandos SQL
@@ -106,10 +107,11 @@ def consulta_dados():
     
     # Conecta ao banco de dados
     conexao = mysql.connector.connect(
-        host="localhost",
-        user="wesley",
-        password="waa123",
-        database="banco_smart_monkey"
+        host="containers-us-west-67.railway.app",
+        user="root",
+        password="NDCAVLFLa47wLwd4D8q3",
+        database="railway",
+        port="7664"
     )
 
     # Cria um cursor para executar comandos SQL
@@ -156,7 +158,6 @@ def atualiza_dados():
     email = data.get("email", "")
     telefone = data.get("telefone", "")
     celular = data.get("celular", "")
-    servicos = data.get("servicos", "")
     cep = data["CEP"]
     logradouro = data["logradouro"]
     complemento = data.get("complemento", "")
@@ -168,20 +169,21 @@ def atualiza_dados():
 
     # Conecta ao banco de dados
     conexao = mysql.connector.connect(
-        host="localhost",
-        user="wesley",
-        password="waa123",
-        database="banco_smart_monkey"
+        host="containers-us-west-67.railway.app",
+        user="root",
+        password="NDCAVLFLa47wLwd4D8q3",
+        database="railway",
+        port="7664"
     )
 
     # Cria um cursor para executar comandos SQL
     cursor = conexao.cursor()
 
     # Define a consulta SQL para inserir dados na tabela "clientes"
-    sql = "UPDATE clientes SET nome_razao_social=%s, nome_fantasia=%s, email=%s, telefone=%s, celular=%s, servicos=%s, cep=%s, logradouro=%s, complemento=%s, numero=%s, bairro=%s, cidade=%s, estado=%s, pais=%s WHERE cpf_cnpj=%s"
+    sql = "UPDATE clientes SET nome_razao_social=%s, nome_fantasia=%s, email=%s, telefone=%s, celular=%s, cep=%s, logradouro=%s, complemento=%s, numero=%s, bairro=%s, cidade=%s, estado=%s, pais=%s WHERE cpf_cnpj=%s"
 
     # Define os valores para os campos da tabela
-    valores = (nome_razao_social, nome_fantasia, email, telefone, celular, servicos, cep, logradouro, complemento, numero, bairro, cidade, estado, pais, cpf_cnpj)
+    valores = (nome_razao_social, nome_fantasia, email, telefone, celular, cep, logradouro, complemento, numero, bairro, cidade, estado, pais, cpf_cnpj)
 
     try:
         # Executa a consulta SQL
@@ -206,10 +208,11 @@ def consulta_nome():
     cpf_cnpj = data["cpf_cnpj"]
     
     conexao = mysql.connector.connect(
-        host="localhost",
-        user="wesley",
-        password="waa123",
-        database="banco_smart_monkey"
+        host="containers-us-west-67.railway.app",
+        user="root",
+        password="NDCAVLFLa47wLwd4D8q3",
+        database="railway",
+        port="7664"
     )
 
     cursor = conexao.cursor()
@@ -246,10 +249,11 @@ def consulta_nome():
 @app.route("/consulta-servicos", methods=["POST"])
 def consulta_servico():
     conexao = mysql.connector.connect(
-        host="localhost",
-        user="wesley",
-        password="waa123",
-        database="banco_smart_monkey"
+        host="containers-us-west-67.railway.app",
+        user="root",
+        password="NDCAVLFLa47wLwd4D8q3",
+        database="railway",
+        port="7664"
     )
     # Cria um cursor para executar comandos SQL
     cursor = conexao.cursor()
@@ -291,10 +295,11 @@ def inserir_servicos():
     servico = data["servico"]
 
     conexao = mysql.connector.connect(
-        host="localhost",
-        user="wesley",
-        password="waa123",
-        database="banco_smart_monkey"
+        host="containers-us-west-67.railway.app",
+        user="root",
+        password="NDCAVLFLa47wLwd4D8q3",
+        database="railway",
+        port="7664"
     )
 
     cursor = conexao.cursor()
@@ -332,10 +337,11 @@ def inserir_contas_receber():
     servicos_id = data.get("servico")
 
     conexao = mysql.connector.connect(
-        host="localhost",
-        user="wesley",
-        password="waa123",
-        database="banco_smart_monkey"
+        host="containers-us-west-67.railway.app",
+        user="root",
+        password="NDCAVLFLa47wLwd4D8q3",
+        database="railway",
+        port="7664"
     )
     cursor = conexao.cursor()
     sql = "INSERT INTO contas_receber (cpf_cnpj, valor, data_emissao, data_vencimento, servicos_id) VALUES (%s, %s, %s, %s, %s)"
@@ -358,10 +364,11 @@ def consulta_receber():
     data = request.get_json(force=True)
     
     conexao = mysql.connector.connect(
-        host="localhost",
-        user="wesley",
-        password="waa123",
-        database="banco_smart_monkey"
+        host="containers-us-west-67.railway.app",
+        user="root",
+        password="NDCAVLFLa47wLwd4D8q3",
+        database="railway",
+        port="7664"
     )
 
     cursor = conexao.cursor()
@@ -415,10 +422,11 @@ def atualiza_receber():
     valores = (cpf_cnpj, valor, data_emissao, data_vencimento, servico, status, id)
 
     conexao = mysql.connector.connect(
-        host="localhost",
-        user="wesley",
-        password="waa123",
-        database="banco_smart_monkey"
+        host="containers-us-west-67.railway.app",
+        user="root",
+        password="NDCAVLFLa47wLwd4D8q3",
+        database="railway",
+        port="7664"
     )
 
     cursor = conexao.cursor()
@@ -440,10 +448,11 @@ def delete_conta():
     data = request.get_json(force=True)
     id = data["id"]
     conexao = mysql.connector.connect(
-        host="localhost",
-        user="wesley",
-        password="waa123",
-        database="banco_smart_monkey"
+        host="containers-us-west-67.railway.app",
+        user="root",
+        password="NDCAVLFLa47wLwd4D8q3",
+        database="railway",
+        port="7664"
     )
     cursor = conexao.cursor()
 
