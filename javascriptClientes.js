@@ -194,7 +194,7 @@ function validaCNPJ(cnpj) {
 
     }
   });
-  xhr.open("POST", "http://127.0.0.1:5000/inserir-dados", true);
+  xhr.open("POST", "https://flask-production-0d1d3.up.railway.app/inserir-dados", true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 
   xhr.send(data);
@@ -218,7 +218,7 @@ function deletaCliente() {
         alert(this.responseText);
         }
       });
-    xhr.open("DELETE", "http://127.0.0.1:5000/delete-dados", true);
+    xhr.open("DELETE", "https://flask-production-0d1d3.up.railway.app/delete-dados", true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 
     xhr.send(data);
@@ -320,7 +320,7 @@ function pesquisar(){
     
     }
   });
-  xhr.open("POST", "http://127.0.0.1:5000/consulta-dados", true);
+  xhr.open("POST", "https://flask-production-0d1d3.up.railway.app/consulta-dados", true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
   
   xhr.send(data);
@@ -373,7 +373,7 @@ xhr.addEventListener("readystatechange", function() {
 
   }
 });
-xhr.open("POST", "http://127.0.0.1:5000/atualiza-dados", true);
+xhr.open("POST", "https://flask-production-0d1d3.up.railway.app/atualiza-dados", true);
 xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 
 xhr.send(data);
