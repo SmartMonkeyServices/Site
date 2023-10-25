@@ -391,6 +391,10 @@ async function pesquisarConta() {
     divResultadoConta.style.display = "none";
     var trElements = tableElement.getElementsByTagName("tr");
     var limparBotao = document.getElementById("limparContas");
+    var somaContasAberto = 0;
+    var somaContasPago = 0;
+    var somaContasAtraso = 0;
+    var somaContas = 0;
     limparBotao.style.display = "none";
     while (trElements.length > 2) {
         tableElement.removeChild(trElements[2]);
@@ -440,6 +444,18 @@ async function pesquisarConta() {
                 }
                 const resultadosProcessados = [];
                 for (const registro of jsonResponse) {
+                    somaContas += Number(registro.valor);
+                    switch (registro.status.toLowerCase()){
+                        case 'em aberto':
+                            somaContasAberto += Number(registro.valor);
+                            break;
+                        case 'pago':
+                            somaContasPago += Number(registro.valor);
+                            break;
+                        case 'em atraso':
+                            somaContasAtraso += Number(registro.valor);
+                            break;
+                    }
                     const registroProcessado = await processaRegistro(registro);
                     resultadosProcessados.push(registroProcessado);
                 }
@@ -462,7 +478,25 @@ async function pesquisarConta() {
                         }
                     }
                     tableElement.appendChild(trElement);
+                    
                 });
+                const somas = [somaContasAberto, somaContasPago, somaContasAtraso, somaContas];
+                const tiposContas = ["Total Em Aberto: ", "Total Pago: ", "Total Em Atraso: ", "Total Geral: "]
+                for (let i = 0; i < somas.length; i++){
+                    let soma = somas[i];
+                    var trElementResultado = document.createElement("tr");
+                    var thElementResultadoTexto = document.createElement("th");
+                    var thElementResultado = document.createElement("th");
+                    thElementResultadoTexto.innerText = tiposContas[i];
+                    thElementResultado.innerText = formatarMoeda(Number(soma).toFixed(2).toString());
+                    thElementResultadoTexto.colSpan = "5";
+                    thElementResultadoTexto.style.textAlign = "right";
+                    thElementResultado.colSpan = "2";
+                    thElementResultado.style.textAlign = "left";
+                    trElementResultado.appendChild(thElementResultadoTexto);
+                    trElementResultado.appendChild(thElementResultado);
+                    tableElement.appendChild(trElementResultado);
+                }
             } else {
                 divResultadoConta.style.display = "none";
                 alert(this.responseText);
