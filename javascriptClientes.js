@@ -7,6 +7,7 @@ const uf = document.getElementById('estado');
 const pais = document.getElementById('pais');
 var fantasia = document.getElementById("divfantasia");
 var divResultado = document.getElementById("divResultado");
+const hostAPI = "http://127.0.0.1:5000";
 
 
 function cepOnchange(){
@@ -194,7 +195,7 @@ function validaCNPJ(cnpj) {
 
     }
   });
-  xhr.open("POST", "https://flask-production-0d1d3.up.railway.app/inserir-dados", true);
+  xhr.open("POST", `${hostAPI}/inserir-dados`, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 
   xhr.send(data);
@@ -218,7 +219,7 @@ function deletaCliente() {
         alert(this.responseText);
         }
       });
-    xhr.open("DELETE", "https://flask-production-0d1d3.up.railway.app/delete-dados", true);
+    xhr.open("DELETE", `${hostAPI}/delete-dados`, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 
     xhr.send(data);
@@ -320,7 +321,7 @@ function pesquisar(){
     
     }
   });
-  xhr.open("POST", "https://flask-production-0d1d3.up.railway.app/consulta-dados", true);
+  xhr.open("POST", `${hostAPI}/consulta-dados`, true);
   xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
   
   xhr.send(data);
@@ -373,7 +374,7 @@ xhr.addEventListener("readystatechange", function() {
 
   }
 });
-xhr.open("POST", "https://flask-production-0d1d3.up.railway.app/atualiza-dados", true);
+xhr.open("POST", `${hostAPI}/atualiza-dados`, true);
 xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 
 xhr.send(data);

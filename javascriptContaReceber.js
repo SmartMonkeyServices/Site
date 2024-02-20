@@ -148,7 +148,7 @@ function onloadServicos() {
 
         }
     });
-    xhr.open("POST", "https://flask-production-0d1d3.up.railway.app/consulta-servicos", true);
+    xhr.open("POST", `${hostAPI}/consulta-servicos`, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 
     xhr.send();
@@ -248,7 +248,7 @@ function pesquisarNomePorCPF_CNPJ(cpf_cnpj) {
 
             }
         });
-        xhr.open("POST", "https://flask-production-0d1d3.up.railway.app/consulta-nome", true);
+        xhr.open("POST", `${hostAPI}/consulta-nome`, true);
         xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 
         xhr.send(data);
@@ -278,7 +278,7 @@ function salvarServico() {
 
         }
     });
-    xhr.open("POST", "https://flask-production-0d1d3.up.railway.app/inserir-servicos", true);
+    xhr.open("POST", `${hostAPI}/inserir-servicos`, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 
     xhr.send(data);
@@ -309,7 +309,7 @@ function consultaServico(id) {
             }
         });
 
-        xhr.open("POST", "https://flask-production-0d1d3.up.railway.app/consulta-servicos", true);
+        xhr.open("POST", `${hostAPI}/consulta-servicos`, true);
         xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 
         xhr.send(data);
@@ -378,7 +378,7 @@ function inserirConta() {
 
         }
     });
-    xhr.open("POST", "https://flask-production-0d1d3.up.railway.app/inserir-receber", true);
+    xhr.open("POST", `${hostAPI}/inserir-receber`, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 
     xhr.send(data);
@@ -503,7 +503,7 @@ async function pesquisarConta() {
             }
         }
     });
-    xhr.open("POST", "https://flask-production-0d1d3.up.railway.app/consulta-receber", true);
+    xhr.open("POST", `${hostAPI}/consulta-receber`, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 
     xhr.send(data);
@@ -535,7 +535,7 @@ function pesquisarContaPorID(id) {
 
             }
         });
-        xhr.open("POST", "https://flask-production-0d1d3.up.railway.app/consulta-receber", true);
+        xhr.open("POST", `${hostAPI}/consulta-receber`, true);
         xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 
         xhr.send(data);
@@ -575,7 +575,7 @@ function attConta() {
 
         }
     });
-    xhr.open("POST", "https://flask-production-0d1d3.up.railway.app/atualiza-receber", true);
+    xhr.open("POST", `${hostAPI}/atualiza-receber`, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 
     xhr.send(data);
@@ -652,7 +652,7 @@ function deletaConta() {
                 cancelaEdicao();
             }
         });
-        xhr.open("DELETE", "https://flask-production-0d1d3.up.railway.app/delete-conta", true);
+        xhr.open("DELETE", `${hostAPI}/delete-conta`, true);
         xhr.setRequestHeader("Content-Type", "application/json;charset=utf-8");
 
         xhr.send(data);
