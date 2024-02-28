@@ -7,7 +7,7 @@ const uf = document.getElementById('estado');
 const pais = document.getElementById('pais');
 var fantasia = document.getElementById("divfantasia");
 var divResultado = document.getElementById("divResultado");
-const hostAPI = "http://127.0.0.1:5000";
+const hostAPI = "api-production-b825.up.railway.app";
 
 
 function cepOnchange(){
