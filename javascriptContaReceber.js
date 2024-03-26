@@ -430,18 +430,6 @@ async function pesquisarConta() {
                 limparBotao.style.display = "block";
                 jsonResponse = JSON.parse(this.responseText)
                 onchangeCliente(jsonResponse[0].cpf_cnpj);
-
-                async function processaRegistro(registro) {
-                    return {
-                        "id": registro.id,
-                        "cpf_cnpj": registro.cpf_cnpj,
-                        "data_emissao": formataData(registro.data_emissao),
-                        "data_vencimento": formataData(registro.data_vencimento),
-                        "servicos_contratados": await consultaAsyncServico(registro.servicos_id),
-                        "valor": formatarMoeda(registro.valor),
-                        "status": formatarTextoUpper(registro.status)
-                    };
-                }
                 const resultadosProcessados = [];
                 for (const registro of jsonResponse) {
                     somaContas += Number(registro.valor);
@@ -681,4 +669,15 @@ function aumentarDiminuirFonte(){
         botao.innerText = "Aumentar fonte";
         table.style.width = "50%";
     }
+}
+async function processaRegistro(registro) {
+    return {
+        "id": registro.id,
+        "cpf_cnpj": registro.cpf_cnpj,
+        "data_emissao": formataData(registro.data_emissao),
+        "data_vencimento": formataData(registro.data_vencimento),
+        "servicos_contratados": Number.isInteger(registro.servicos_id) ? await consultaAsyncServico(registro.servicos_id) : registro.servicos_id,
+        "valor": formatarMoeda(registro.valor),
+        "status": formatarTextoUpper(registro.status)
+    };
 }
