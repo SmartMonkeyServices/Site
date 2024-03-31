@@ -87,3 +87,34 @@ display: block;
 justify-content:center; 
 align-items:center;
 }
+table{
+  width: 50%;
+    margin: 0 auto;
+  display: block;
+  justify-content:center; 
+  align-items:center;
+}
+
+th{
+  text-align: center;
+  padding: 10px;
+  background-color: aquamarine;
+}
+td{
+  text-align: center;
+}
+
+.th{
+  text-align: left;
+  background-color: black;
+  color: aliceblue;
+}
+
+.tdElement:hover {
+  cursor:pointer !important;
+  color: aquamarine;
+}
+
+.div{
+  width: 100%;
+}

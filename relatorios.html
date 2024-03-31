@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br" xml:lang="pt-br">
+
+<head>
+    <title>Smart Monkey</title>
+  <link rel="stylesheet" href="cssContaReceber.css">
+
+</head>
+<header>
+    <img src="logo site.jpg" alt="Logo da empresa" width="300" height="100" style="display:block; margin: 0 auto;">
+    <div class="divButton">
+        <button onclick="aumentarDiminuirFonte()" id="aumentarDimunirFonte" class="fontButton">Aumentar fonte</button>
+    </div>
+</header>
+
+<body onload="Onload()">
+    <form id="formRelatorios">
+        <label class="label" for="ignorarVencimento">Ignorar Vencimento</label>
+        <div class="input">
+            <input type="checkbox" id="ignorarVencimento" name="ignorarVencimento" onchange="IgnorarVencimentoOnChange(this.checked)">
+        </div>
+        <label class="label" for="periodo_vencimento_inicial">Período de Vencimento</label>
+        <div class="input">
+            <input type="date" id="periodo_vencimento_inicial" name="periodo_vencimento_inicial"
+                onchange="OnchangePeriodo()" required>
+            <input type="date" id="periodo_vencimento_final" name="periodo_vencimento_final"
+                onchange="OnchangePeriodo()" required>
+        </div>
+        <label class="label" for="clienteCPF_CNPJ">Cliente</label>
+        <div class="campo-container">
+            <div class="campo">
+                <input type="text" placeholder="Identifique pelo CPF/CNPJ" id="clienteCPF_CNPJ" name="clienteCPF_CNPJ"
+                    onchange="onchangeCliente()">
+            </div>
+        </div>
+        <input class="inputs" style=opacity:0.3 type="text" id="nomeCliente" name="nomeCliente" readonly>
+        <label class="label" for="codigo_fatura">Código da fatura</label>
+        <div class="input">
+            <input type="number" id="codigo_fatura" name="codigo_fatura">
+        </div>
+        <div class="campo-container">
+            <label for="servicos">Serviços Contratados</label>
+        </div>
+        <select class="inputs" type="text" id="servicos" name="servicos">
+            <option value="todos">Todos</option>
+        </select>
+        <div id="statusDiv">
+            <label class="label" for="status">Status</label>
+            <div class="input">
+                <select type="date" id="status" name="status">
+                    <option value="99000001">Todos</option>
+                    <option value="0">Em Aberto</option>
+                    <option value="1">Pago</option>
+                    <option value="2">Em Atraso</option>
+                </select>
+
+            </div>
+        </div>
+        <button type="submit" id="confirmar" onclick="GerarRelatorio()">Gerar relatório</button>
+    </form>
+    <a href="index.html" id="voltaPaginaInicial"><button>Voltar</button></a>
+    <button id="filtros" onclick="AbriFecharFiltros()" style="display: none;">Filtros</button>
+
+    <div class="div" id="divResultadoRelatorio" style="display: none;">
+        <table id="tableElementRelatorio">
+          <tr>
+              <th>Número da Fatura</th>
+              <th>CPF/CNPJ</th>
+              <th>Data de Emissão</th>
+              <th>Data de Vencimento</th>
+              <th>Serviços Contratados</th>
+              <th>Valor</th>
+              <th>Status</th>
+          </tr>
+      </table>
+      </div>
+      <button style="display: none" onclick="limparRelatorio()" id="limparRelatorio">Limpar</button>
+    <script src="javascriptContaReceber.js"></script>
+    <script src="javascriptClientes.js"></script>
+    <script src="javascriptRelatorios.js"></script>
+
+</body>
+
+</html>
