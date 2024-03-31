@@ -26,19 +26,25 @@ function GerarRelatorio() {
     var cpf_cnpj = document.getElementById("clienteCPF_CNPJ")?.value;
     var codigo_fatura = document.getElementById("codigo_fatura")?.value;
     var servico = document.getElementById("servicos").selectedOptions[0]?.value;
-    var status = document.getElementById("status").selectedOptions[0]?.value;
-
+    var status = document.getElementById("status").selectedOptions[0];
+    var ignorarVencimento = document.getElementById("ignorarVencimento")?.checked;
+    var trElements = tableElementRelatorio.getElementsByTagName("tr");
+    while (trElements.length > 1) {
+        tableElementRelatorio.removeChild(trElements[1]);
+    }
     var data = {
-        periodo_vencimento_inicial: periodo_vencimento_inicial.value,
-        periodo_vencimento_final: periodo_vencimento_final.value,
-        servico: servico,
-        status: status
+        servicos_id: servico,
+        status: status.value != 99000001 ? status.text.toLowerCase() : status.value
     };
+    if(!ignorarVencimento){
+        data.periodo_vencimento_inicial = periodo_vencimento_inicial.value;
+        data.periodo_vencimento_final = periodo_vencimento_final.value;
+    }
     if (cpf_cnpj) {
         data.cpf_cnpj = cpf_cnpj;
     };
     if (codigo_fatura) {
-        data.codigo_fatura = codigo_fatura;
+        data.id = codigo_fatura;
     };
     var data = JSON.stringify(data);
 
@@ -51,7 +57,7 @@ function GerarRelatorio() {
 
             }
             else {
-                divResultadoConta.style.display = "none";
+                divResultadoRelatorio.style.display = "none";
                 alert(this.responseText);
             }
         }
@@ -148,5 +154,24 @@ function AbriFecharFiltros(){
     if(formRelatorios.hidden == true){
         buttonFiltros.hidden = false;
     }
+}
+function IgnorarVencimentoOnChange(ignorarVencimento){
+    if(ignorarVencimento){
+        periodo_vencimento_final.readOnly = true;
+        periodo_vencimento_final.style.opacity = "50%";
+        periodo_vencimento_inicial.readOnly = true;
+        periodo_vencimento_inicial.style.opacity = "50%";
+
+        
+    }
+    else{
+        periodo_vencimento_inicial.readOnly = false;
+        periodo_vencimento_inicial.style.opacity = "";
+        periodo_vencimento_final.readOnly = false;
+        periodo_vencimento_final.style.opacity = "";
+    }
+}
+function limparRelatorio(){
+    divResultadoRelatorio.style.display = "none";
 }
 //#endregion

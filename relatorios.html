@@ -15,6 +15,10 @@
 
 <body onload="Onload()">
     <form id="formRelatorios">
+        <label class="label" for="ignorarVencimento">Ignorar Vencimento</label>
+        <div class="input">
+            <input type="checkbox" id="ignorarVencimento" name="ignorarVencimento" onchange="IgnorarVencimentoOnChange(this.checked)">
+        </div>
         <label class="label" for="periodo_vencimento_inicial">Período de Vencimento</label>
         <div class="input">
             <input type="date" id="periodo_vencimento_inicial" name="periodo_vencimento_inicial"
@@ -60,9 +64,6 @@
     <div class="div" id="divResultadoRelatorio" style="display: none;">
         <table id="tableElementRelatorio">
           <tr>
-            <th class= "th" colspan="7" id="nomeCliente">Cliente: </th>
-          </tr>
-          <tr>
               <th>Número da Fatura</th>
               <th>CPF/CNPJ</th>
               <th>Data de Emissão</th>
@@ -73,7 +74,7 @@
           </tr>
       </table>
       </div>
-      <button style="display: none" onclick="limparContas()" id="limparRelatorio">Limpar</button>
+      <button style="display: none" onclick="limparRelatorio()" id="limparRelatorio">Limpar</button>
     <script src="javascriptContaReceber.js"></script>
     <script src="javascriptClientes.js"></script>
     <script src="javascriptRelatorios.js"></script>
